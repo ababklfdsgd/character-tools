@@ -11,9 +11,11 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  Typography
+  Typography,
+  Divider
 } from '@mui/material'
 import { type FC } from 'react'
+import AIProviderSettings from './AIProviderSettings'
 
 const SettingsDialog: FC = () => {
   const { openSettings, tokenizer } = useAppSelector((state) => state.app)
@@ -56,6 +58,10 @@ const SettingsDialog: FC = () => {
             Tokenizer used to estimate the number of tokens.
           </FormHelperText>
         </FormControl>
+        
+        <Divider sx={{ my: 3 }} />
+        
+        <AIProviderSettings />
       </DialogContent>
     </Dialog>
   )

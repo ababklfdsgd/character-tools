@@ -3,7 +3,6 @@ import useAppDispatch from '@/hooks/useAppDispatch'
 import useAppSelector from '@/hooks/useAppSelector'
 import { setOpenSettings, setTheme } from '@/state/appSlice'
 import {
-  faBug,
   faMoon,
   faScrewdriverWrench,
   faSun
@@ -58,19 +57,6 @@ const Header: FC = () => {
         </Tooltip>
       </div>
       <div>
-        <Tooltip title="Report a bug">
-          <IconButton
-            component="a"
-            href="https://github.com/SrJuggernaut/character-tools/issues"
-            target="_blank"
-          >
-            <FontAwesomeIcon
-              icon={faBug}
-              fixedWidth
-              size="sm"
-            />
-          </IconButton>
-        </Tooltip>
         <Tooltip title="Settings">
           <IconButton
             component="button"

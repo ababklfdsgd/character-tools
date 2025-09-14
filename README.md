@@ -51,6 +51,7 @@ bun install
 
 ```bash
 bun run dev
+bun run develop
 ```
 
 3. Make changes to the source code, Vite hot-reloads the page for you.

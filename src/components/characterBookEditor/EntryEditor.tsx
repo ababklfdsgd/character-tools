@@ -1,3 +1,4 @@
+import AIGeneration from '@/components/AIGeneration'
 import NumberField from '@/components/ui/form/NumberField'
 import { type CharacterBookEntry } from '@/types/lorebook'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
@@ -12,6 +13,7 @@ import {
   IconButton,
   Radio,
   RadioGroup,
+  Stack,
   TextField,
   Typography
 } from '@mui/material'
@@ -39,19 +41,28 @@ const EntryEditor: FC<EntryEditorProps> = ({ onChange, value }) => {
         fullWidth
         margin="normal"
       />
-      <TextField
-        id="comment"
-        label="Comment"
-        helperText="A comment for your entry."
-        value={value.comment ?? ''}
-        onChange={(e) => {
-          onChange({ ...value, comment: e.target.value })
-        }}
-        multiline
-        variant="outlined"
-        fullWidth
-        margin="normal"
-      />
+      <Stack spacing={1}>
+        <TextField
+          id="comment"
+          label="Comment"
+          helperText="A comment for your entry."
+          value={value.comment ?? ''}
+          onChange={(e) => {
+            onChange({ ...value, comment: e.target.value })
+          }}
+          multiline
+          variant="outlined"
+          fullWidth
+          margin="normal"
+        />
+        <AIGeneration
+          onGenerate={(text) => onChange({ ...value, comment: text })}
+          context={`Entry Name: ${value.name}\nKeys: ${value.keys.join(', ')}`}
+          defaultPrompt="Write a brief comment describing what this lorebook entry is about and what information it contains."
+          label="Generate Comment"
+          helperText="Generate a comment for this entry"
+        />
+      </Stack>
       <NumberField
         id="priority"
         label="Priority"
@@ -322,20 +333,29 @@ const EntryEditor: FC<EntryEditorProps> = ({ onChange, value }) => {
           />
         </div>
       </Box>
-      <TextField
-        id="content"
-        label="Content"
-        helperText="The content of the input, this is the information that will be sent to the language model, it generally accepts macros."
-        value={value.content ?? ''}
-        onChange={(e) => {
-          onChange({ ...value, content: e.target.value })
-        }}
-        multiline
-        minRows={3}
-        variant="outlined"
-        fullWidth
-        margin="normal"
-      />
+      <Stack spacing={1}>
+        <TextField
+          id="content"
+          label="Content"
+          helperText="The content of the input, this is the information that will be sent to the language model, it generally accepts macros."
+          value={value.content ?? ''}
+          onChange={(e) => {
+            onChange({ ...value, content: e.target.value })
+          }}
+          multiline
+          minRows={3}
+          variant="outlined"
+          fullWidth
+          margin="normal"
+        />
+        <AIGeneration
+          onGenerate={(text) => onChange({ ...value, content: text })}
+          context={`Entry Name: ${value.name}\nKeys: ${value.keys.join(', ')}\nComment: ${value.comment}`}
+          defaultPrompt="Write detailed lorebook entry content that will be provided to the AI when the specified keys are matched. Include relevant world-building information, character details, or situational context that should influence the AI's responses."
+          label="Generate Content"
+          helperText="Generate detailed content for this entry"
+        />
+      </Stack>
     </>
   )
 }

@@ -7,10 +7,12 @@ import {
   FormControlLabel,
   FormGroup,
   FormHelperText,
+  Stack,
   TextField,
   Typography
 } from '@mui/material'
 import { type FC } from 'react'
+import AIGeneration from '../AIGeneration'
 
 const CharacterBookData: FC = () => {
   const characterEditorState = useAppSelector(
@@ -47,23 +49,32 @@ const CharacterBookData: FC = () => {
         fullWidth
         margin="normal"
       />
-      <TextField
-        id="description"
-        label="Description"
-        value={characterEditorState.description}
-        onChange={handleChange}
-        error={characterEditorState.description === ''}
-        helperText={
-          characterEditorState.description === ''
-            ? 'Description is required'
-            : 'A description of your CharacterBook should not be included in your prompt when it is sent to the language model.'
-        }
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        multiline
-        minRows={4}
-      />
+      <Stack spacing={1}>
+        <TextField
+          id="description"
+          label="Description"
+          value={characterEditorState.description}
+          onChange={handleChange}
+          error={characterEditorState.description === ''}
+          helperText={
+            characterEditorState.description === ''
+              ? 'Description is required'
+              : 'A description of your CharacterBook should not be included in your prompt when it is sent to the language model.'
+          }
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          multiline
+          minRows={4}
+        />
+        <AIGeneration
+          onGenerate={(text) => dispatch(updateCharacterBookEditor({ description: text }))}
+          context={`Character Book Name: ${characterEditorState.name}`}
+          defaultPrompt="Write a description for this character book/lorebook/world book. Explain its purpose and what kind of knowledge or information it contains."
+          label="Generate Description"
+          helperText="Generate a description for the character book"
+        />
+      </Stack>
       <NumberField
         id="scan_depth"
         label="Scan Depth"

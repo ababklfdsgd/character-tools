@@ -16,7 +16,9 @@ const initialState: AppState = {
     (window.localStorage.getItem(
       'characterBookExportNameTemplate'
     ) as AppState['characterBookExportNameTemplate']) ??
-    '{{name}}-characterBook'
+    '{{name}}-characterBook',
+  aiProviders: JSON.parse(window.localStorage.getItem('aiProviders') ?? '[]'),
+  selectedAiProvider: window.localStorage.getItem('selectedAiProvider') ?? undefined
 }
 
 const appSlice = createSlice({
@@ -71,16 +73,66 @@ const appSlice = createSlice({
         ...state,
         characterBookExportNameTemplate: action.payload
       }
+    },
+    setAiProviders: (state, action: PayloadAction<AppState['aiProviders']>) => {
+      window.localStorage.setItem('aiProviders', JSON.stringify(action.payload))
+      return {
+        ...state,
+        aiProviders: action.payload
+      }
+    },
+    setSelectedAiProvider: (state, action: PayloadAction<AppState['selectedAiProvider']>) => {
+      if (action.payload) {
+        window.localStorage.setItem('selectedAiProvider', action.payload)
+      } else {
+        window.localStorage.removeItem('selectedAiProvider')
+      }
+      return {
+        ...state,
+        selectedAiProvider: action.payload
+      }
+    },
+    addAiProvider: (state, action: PayloadAction<AppState['aiProviders'][0]>) => {
+      const newProviders = [...state.aiProviders, action.payload]
+      window.localStorage.setItem('aiProviders', JSON.stringify(newProviders))
+      return {
+        ...state,
+        aiProviders: newProviders
+      }
+    },
+    removeAiProvider: (state, action: PayloadAction<string>) => {
+      const newProviders = state.aiProviders.filter(p => p.name !== action.payload)
+      window.localStorage.setItem('aiProviders', JSON.stringify(newProviders))
+      return {
+        ...state,
+        aiProviders: newProviders,
+        selectedAiProvider: state.selectedAiProvider === action.payload ? undefined : state.selectedAiProvider
+      }
+    },
+    updateAiProvider: (state, action: PayloadAction<AppState['aiProviders'][0]>) => {
+      const newProviders = state.aiProviders.map(p => 
+        p.name === action.payload.name ? action.payload : p
+      )
+      window.localStorage.setItem('aiProviders', JSON.stringify(newProviders))
+      return {
+        ...state,
+        aiProviders: newProviders
+      }
     }
   }
 })
-
-export default appSlice
 
 export const {
   setTheme,
   setTokenizer,
   setOpenSettings,
   setCharacterCardExportNameTemplate,
-  setCharacterBookExportNameTemplate
+  setCharacterBookExportNameTemplate,
+  setAiProviders,
+  setSelectedAiProvider,
+  addAiProvider,
+  removeAiProvider,
+  updateAiProvider
 } = appSlice.actions
+
+export default appSlice
